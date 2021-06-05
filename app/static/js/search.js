@@ -21,7 +21,6 @@ function filterRepos() {
 
 // Add querystring (?language="Python") to the base url (http://localhost:5000/repos) and redirect 
 function redirect() {
-    debugger
     var currentUrl = window.location.origin + window.location.pathname;
     var search_value = document.getElementById('search_language').value;
     encoded =  encodeURIComponent(search_value)

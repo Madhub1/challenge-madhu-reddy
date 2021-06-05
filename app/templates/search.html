@@ -13,41 +13,40 @@
     <!-- <input name="language-input" type="text" id="language-input" onkeyup="filterRepos()" placeholder="Enter a language of your choice.."> -->
 
     <select name="l" id="search_language">
-        <!-- <optgroup label="Popular"> -->
-            <option value="default">Select a language</option>
-            <option value="C">C</option>
-            <option value="C#">C#</option>
-            <option value="C++">C++</option>
-            <option value="CoffeeScript">CoffeeScript</option>
-            <option value="CSS">CSS</option>
-            <option value="Dart">Dart</option>
-            <option value="DM">DM</option>
-            <option value="Elixir">Elixir</option>
-            <option value="Go">Go</option>
-            <option value="Groovy">Groovy</option>
-            <option value="HTML">HTML</option>
-            <option value="Java">Java</option>
-            <option value="JavaScript">JavaScript</option>
-            <option value="Kotlin">Kotlin</option>
-            <option value="Objective-C">Objective-C</option>
-            <option value="Perl">Perl</option>
-            <option value="PHP">PHP</option>
-            <option value="PowerShell">PowerShell</option>
-            <option value="Python">Python</option>
-            <option value="Ruby">Ruby</option>
-            <option value="Rust">Rust</option>
-            <option value="Scala">Scala</option>
-            <option value="Shell">Shell</option>
-            <option value="Swift">Swift</option>
-            <option value="TypeScript">TypeScript</option>
-        <!-- </optgroup> -->
+        <option value="default">Select a language</option>
+        <option value="C">C</option>
+        <option value="C#">C#</option>
+        <option value="C++">C++</option>
+        <option value="CoffeeScript">CoffeeScript</option>
+        <option value="CSS">CSS</option>
+        <option value="Dart">Dart</option>
+        <option value="DM">DM</option>
+        <option value="Elixir">Elixir</option>
+        <option value="Go">Go</option>
+        <option value="Groovy">Groovy</option>
+        <option value="HTML">HTML</option>
+        <option value="Java">Java</option>
+        <option value="JavaScript">JavaScript</option>
+        <option value="Kotlin">Kotlin</option>
+        <option value="Objective-C">Objective-C</option>
+        <option value="Perl">Perl</option>
+        <option value="PHP">PHP</option>
+        <option value="PowerShell">PowerShell</option>
+        <option value="Python">Python</option>
+        <option value="Ruby">Ruby</option>
+        <option value="Rust">Rust</option>
+        <option value="Scala">Scala</option>
+        <option value="Shell">Shell</option>
+        <option value="Swift">Swift</option>
+        <option value="TypeScript">TypeScript</option>
     </select>
 
-    <button id="submit-button" onclick = "redirect()">Submit</button>
-    <h3>Most starred public repos</h3>
-    <input type="text" id="filterTable-input" onkeyup="filterRepos()" placeholder="Filter the table for a repo.." title="Type in a repo name">
+    <button id="submit-button" onclick="redirect()">Submit</button>
+    <h3>Most starred public repos for {{ language }}</h3>
+    <input type="text" id="filterTable-input" onkeyup="filterRepos()" placeholder="Filter the table for a repo.."
+        title="Type in a repo name">
 
-    <table id="myTable" class="sortable" >
+    <table id="myTable" class="sortable">
         <thead>
             <tr>
                 <th>Repo_name</th>

@@ -1,0 +1,19 @@
+version: "2"
+services:
+  app:
+    build: ./app
+    links:
+      - db
+    ports:
+      - "5000:5000"
+  db:
+    image: mysql:8.0
+    container_name: mysql_8a
+    ports:
+      - "3305:3306"
+    cap_add:
+      - SYS_NICE # CAP_SYS_NICE
+    security_opt:
+      - seccomp:unconfined
+    environment:
+      - MYSQL_ROOT_PASSWORD=superdb.1
