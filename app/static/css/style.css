@@ -1,0 +1,83 @@
+
+<style>
+        * {
+            box-sizing: border-box;
+        }
+
+        #language-label {
+            font-size: 20px;
+            margin-bottom: 12px;
+            padding: 5px;
+        }
+        
+        #language-input,
+        #search_language
+        {
+            background-position: 10px 10px;
+            background-repeat: no-repeat;
+            width: 20%;
+            font-size: 14px;
+            padding: 12px 20px 12px 10px;
+            border: 1px solid #ddd;
+            margin-bottom: 12px;
+        }
+
+        
+        #submit-button
+         {
+            background-color: #787c78;
+            border: none;
+            color: white;
+            padding: 12px 20px 12px 12px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin-left: 5px;
+            cursor: pointer;
+            
+        }
+        #submit-button:active,
+        #submit-button:focus{
+            opacity: 0.9;
+            background-color: #2B2B2B;
+        }
+
+        #filterTable-input {
+            background-position: 10px 10px;
+            background-repeat: no-repeat;
+            width: 25%;
+            font-size: 14px;
+            padding: 12px 20px 12px 5px;
+            border: 1px solid #ddd;
+            margin-bottom: 12px;
+            /* margin-top: 20px; */
+        }
+
+        #myTable {
+            border-collapse: collapse;
+            width: 100%;
+            border: 1px solid rgb(150, 114, 114);
+            font-size: 18px;
+        }
+
+        #myTable th{
+            text-align: left;
+            padding: 12px;
+            background-color: #f0e9e9;
+            
+        }
+        #myTable td {
+            text-align: left;
+            padding: 12px;
+        }
+
+        #myTable tr {
+            border: 1px solid rgb(189, 180, 180);
+        }
+
+        #myTable tr.header,
+        #myTable tr:hover {
+            background-color: #f1f1f1;
+        }
+</style>
