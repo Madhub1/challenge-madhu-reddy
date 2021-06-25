@@ -1,118 +1,88 @@
-from sqlalchemy import (
-    create_engine,
-    MetaData,
-    Table,
-    Column,
-    Integer,
-    String,
-    insert,
-)
-import pymysql
+from app import app
+from sqlalchemy import create_engine
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
+from config import DevelopmentConfig as devConfig
 
 
-## MySQLdb module
-pymysql.install_as_MySQLdb()
+app.config["SQLALCHEMY_DATABASE_URI"] = devConfig.SQLALCHEMY_DATABASE_URI
+
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+## create db instance
+db = SQLAlchemy(app)
+
+## initialize db
+db.init_app(app)
+
+## migrate
+migrate = Migrate(app, db)
 
 
-class Repo:
-    def __init__(self):
-        self.user_id = "root"
-        self.password = "superdb.1"
-        # self.host = "localhost"  ## used when running the app locally
-        self.host = "db"  ## when running the app in docker container
-        self.port = 3306
-        self.DB_NAME = "repos_db"
-        self.table_name = "repos"
-        self.db_uri = f"mysql+pymysql://{self.user_id}:{self.password}@{self.host}:{self.port}/{self.DB_NAME}"
-        ## create an engine with the
-        self.engine = create_engine(self.db_uri)
+class Repo(db.Model):
+    __tablename__ = "repos"
 
-    def create_database(self):
-        print("create_database is invoked")
-        try:
-            base_db_uri = f"mysql+pymysql://{self.user_id}:{self.password}@{self.host}:{self.port}"
+    id = db.Column(db.Integer, primary_key=True)
+    repo_name = db.Column(db.String(100), nullable=False)
+    stars = db.Column(db.Integer, nullable=False)
+    repo_url = db.Column(db.String(100), nullable=False)
+    language = db.Column(db.String(20), nullable=False)
 
-            ## Create a db engine
-            db_engine = create_engine(base_db_uri)
+    def __init__(self, repo_name, stars, repo_url, language):
+        self.repo_name = repo_name
+        self.stars = stars
+        self.repo_url = repo_url
+        self.language = language
 
-            ## create a databse if doesn't exist
-            with db_engine.connect() as conn:
-                conn.execute(f"CREATE DATABASE IF NOT EXISTS {self.DB_NAME}")
-                print(f"database {self.DB_NAME} is created successfully!")
 
-        except Exception as ex:
-            print(ex)
+def create_database():
+    ## Create a db engine
+    db_engine = create_engine(devConfig.BASE_DB_URI)
 
-    def insert_data_into_db(self, results: list):
-        print("insert_data_into_db is invoked")
-        try:
-            with self.engine.connect() as conn:
-                conn.execute(f"USE {self.DB_NAME}")
-                print(f"using {self.DB_NAME} database")
+    ## create a databse if doesn't exist
+    with db_engine.connect() as conn:
+        conn.execute(f"CREATE DATABASE IF NOT EXISTS {devConfig.DB_NAME}")
+        # print(f"Database {devConfig.DB_NAME} is created successfully!")
 
-                ## Create a metadata instance
-                metadata = MetaData(self.engine)
 
-                ## Declare a table
-                table = Table(
-                    self.table_name,
-                    metadata,
-                    Column("id", Integer, primary_key=True),
-                    Column("repo_name", String(100)),
-                    Column("stars", Integer),
-                    Column("repo_url", String(100)),
-                    Column("language", String(20)),
-                )
+def insert_data_into_db(results):
+    try:
+        ## creates a table
+        db.create_all()
+        for result in results:
+            ## preparing insert statment
+            insert_repo = Repo(
+                repo_name=result[0],
+                stars=result[1],
+                repo_url=result[2],
+                language=result[3],
+            )
 
-                ## Create all tables
-                metadata.create_all(self.engine)
+            ## inserts the records
+            db.session.add(insert_repo)
 
-                ## Prepare an insert statement
-                insert_stmt = insert(table).values(results)
+        ## commit the db changes
+        db.session.commit()
+        # print("Data has been inserted successfully!")
+    except Exception as ex:
+        print(ex)
 
-                ## execute insert statement
-                conn.execute(insert_stmt)
-        except Exception as ex:
-            print(ex)
 
-    def verify_if_data_exists_in_db(self, language_choice: str):
-        print("verify_if_data_exists_in_db is invoked")
-        count = 0
-        try:
-            with self.engine.connect() as conn:
-                ## use the specific database
-                self.engine.execute(f"USE {self.DB_NAME}")
-                print(f"using {self.DB_NAME} database")
+def verify_if_data_exists_in_db(language_choice):
+    count = 0
+    try:
+        repos = Repo.query.filter_by(language=language_choice).all()
+        if repos is not None:
+            count = len(repos)
+    except Exception as ex:
+        print(ex)
+    return count
 
-                ## Prepare select statement
-                select_stmt = f"select count(*) from {self.table_name} where language = '{language_choice}';"
 
-                ## execute select statement
-                result = conn.execute(select_stmt)
-
-                ## get the count of rows in database for the given language
-                for _row in result:
-                    count = _row[0]
-        except Exception as ex:
-            print(ex)
-        return count
-
-    def get_data_from_db(self, language_choice: str):
-        print("get_data_from_db is invoked")
-        records = []
-        try:
-            with self.engine.connect() as conn:
-                ## use the specific database
-                self.engine.execute(f"USE {self.DB_NAME}")
-                print(f"using {self.DB_NAME} database")
-
-                ## Prepare select statement
-                select_stmt = f"select * from {self.table_name} where language = '{language_choice}' order by stars desc;"
-
-                ## execute select statement
-                records = conn.execute(select_stmt)
-        except Exception as ex:
-            print(ex)
-
-        ## return the data for the given language from the database
-        return records
+def get_data_from_db(language_choice):
+    try:
+        ## get all the records for a given language
+        repos = Repo.query.filter_by(language=language_choice).all()
+        return repos
+    except Exception as ex:
+        print(ex)

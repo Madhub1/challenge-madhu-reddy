@@ -12,12 +12,12 @@ EXPOSE 5000
 # creates a directory with this name if it doesn’t exist
 WORKDIR /app
 
-# Install any needed packages specified in requirements.txt
-COPY requirements.txt /app
-RUN pip3 install -r requirements.txt
-
-# Copy all files in the /app directory to /app directory on container
 COPY . /app
 
-# Run app.py when the container launches
-CMD [ "python3", "-m", "flask", "run", "--host=0.0.0.0"]
+# Install any needed packages specified in requirements.txt
+RUN pip3 install -r requirements.txt
+
+RUN chmod u+x /app/docker-entrypoint.sh
+
+ENTRYPOINT ["/app/docker-entrypoint.sh"]
+# CMD [ "python3", "-m", "flask", "run", "--host=0.0.0.0"]
